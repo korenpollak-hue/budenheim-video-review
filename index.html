@@ -1,0 +1,885 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Meeting-Protokoll – Budenheim Video Review</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+
+  :root {
+    --budenheim: #1a3668;
+    --budenheim-light: #2a4f8f;
+    --budenheim-dark: #0f2248;
+    --bg: #ffffff;
+    --surface: #f5f7fb;
+    --surface-2: #eaeff7;
+    --border: #d4dce8;
+    --text: #1a1d2b;
+    --text-muted: #5e6a82;
+    --accent: #1a3668;
+    --accent-glow: rgba(26, 54, 104, 0.06);
+    --red: #c0392b;
+    --red-bg: rgba(192, 57, 43, 0.06);
+    --red-border: rgba(192, 57, 43, 0.2);
+    --amber: #d4860b;
+    --amber-bg: rgba(212, 134, 11, 0.06);
+    --amber-border: rgba(212, 134, 11, 0.2);
+    --green: #1a8a4a;
+    --green-bg: rgba(26, 138, 74, 0.06);
+    --green-border: rgba(26, 138, 74, 0.2);
+    --blue: #2a6cb8;
+    --blue-bg: rgba(42, 108, 184, 0.06);
+    --cyan: #0e8a8a;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'Inter', -apple-system, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.65;
+    padding: 2rem;
+    max-width: 1100px;
+    margin: 0 auto;
+  }
+
+  /* Header */
+  .header {
+    text-align: center;
+    padding: 2.5rem 2rem 2rem;
+    margin-bottom: 2rem;
+    background: linear-gradient(135deg, var(--budenheim) 0%, var(--budenheim-light) 100%);
+    border-radius: 16px;
+    color: white;
+    position: relative;
+    overflow: hidden;
+  }
+  .header::after {
+    content: '';
+    position: absolute;
+    bottom: 0; right: 0;
+    width: 300px; height: 300px;
+    background: radial-gradient(circle, rgba(255,255,255,0.06) 0%, transparent 70%);
+    pointer-events: none;
+  }
+  .header .logos {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 1.5rem;
+    margin-bottom: 1rem;
+    position: relative;
+  }
+  .header .logo-text {
+    font-size: 1.5rem;
+    font-weight: 800;
+    letter-spacing: 0.04em;
+  }
+  .header .logo-divider {
+    width: 2px;
+    height: 28px;
+    background: rgba(255,255,255,0.3);
+  }
+  .header h1 {
+    font-size: 1.6rem;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    margin-bottom: 0.3rem;
+    position: relative;
+  }
+  .header .subtitle {
+    color: rgba(255,255,255,0.7);
+    font-size: 0.9rem;
+    font-weight: 400;
+    position: relative;
+  }
+
+  /* Meta Grid */
+  .meta-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 0.8rem;
+    margin-bottom: 2.5rem;
+  }
+  .meta-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 1rem 1.2rem;
+  }
+  .meta-card .label {
+    font-size: 0.65rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--text-muted);
+    margin-bottom: 0.2rem;
+  }
+  .meta-card .value {
+    font-size: 0.95rem;
+    font-weight: 600;
+    color: var(--budenheim);
+  }
+
+  /* Section */
+  .section { margin-bottom: 2.5rem; }
+  .section-title {
+    font-size: 1.15rem;
+    font-weight: 700;
+    margin-bottom: 1rem;
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    color: var(--budenheim);
+  }
+  .section-title .icon {
+    width: 30px; height: 30px;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.9rem;
+    flex-shrink: 0;
+  }
+
+  /* Verdict Banner */
+  .verdict {
+    background: var(--green-bg);
+    border: 1px solid var(--green-border);
+    border-radius: 12px;
+    padding: 1.3rem 1.6rem;
+    margin-bottom: 1.5rem;
+  }
+  .verdict h3 { color: var(--green); margin-bottom: 0.5rem; font-size: 1rem; }
+  .verdict ul { list-style: none; padding: 0; }
+  .verdict li {
+    font-size: 0.88rem;
+    padding: 0.3rem 0;
+    color: var(--text);
+    padding-left: 1.2rem;
+    position: relative;
+  }
+  .verdict li::before {
+    content: '✓';
+    position: absolute;
+    left: 0;
+    color: var(--green);
+    font-weight: 700;
+  }
+
+  /* Scene Cards */
+  .scene-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    margin-bottom: 1rem;
+    overflow: hidden;
+  }
+  .scene-header {
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;
+    padding: 1rem 1.4rem;
+    background: var(--surface-2);
+    border-bottom: 1px solid var(--border);
+    cursor: pointer;
+    user-select: none;
+  }
+  .scene-header:hover { background: var(--border); }
+  .scene-num {
+    width: 32px; height: 32px;
+    border-radius: 8px;
+    background: var(--budenheim);
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 800;
+    font-size: 0.85rem;
+    flex-shrink: 0;
+  }
+  .scene-name { font-weight: 700; font-size: 0.95rem; flex: 1; }
+  .scene-status {
+    display: inline-block;
+    padding: 0.2rem 0.7rem;
+    border-radius: 20px;
+    font-size: 0.7rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+  .status-ok { background: var(--green-bg); color: var(--green); border: 1px solid var(--green-border); }
+  .status-fix { background: var(--red-bg); color: var(--red); border: 1px solid var(--red-border); }
+  .status-tweak { background: var(--amber-bg); color: var(--amber); border: 1px solid var(--amber-border); }
+  .scene-body { padding: 1.2rem 1.4rem; }
+  .scene-body .discussed, .scene-body .fiorella-tasks {
+    margin-bottom: 1rem;
+  }
+  .scene-body .discussed:last-child, .scene-body .fiorella-tasks:last-child {
+    margin-bottom: 0;
+  }
+  .sub-label {
+    font-size: 0.7rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    margin-bottom: 0.5rem;
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+  }
+  .sub-label.discussed-label { color: var(--text-muted); }
+  .sub-label.task-label { color: var(--red); }
+  .sub-label.note-label { color: var(--blue); }
+
+  .discussed ul, .fiorella-tasks ul {
+    list-style: none;
+    padding: 0;
+  }
+  .discussed li {
+    font-size: 0.88rem;
+    padding: 0.35rem 0;
+    padding-left: 1.2rem;
+    position: relative;
+    color: var(--text);
+  }
+  .discussed li::before {
+    content: '—';
+    position: absolute;
+    left: 0;
+    color: var(--text-muted);
+  }
+
+  /* Task Items (Fiorella) */
+  .task-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.7rem;
+    padding: 0.6rem 0.9rem;
+    background: var(--red-bg);
+    border: 1px solid var(--red-border);
+    border-radius: 8px;
+    margin-bottom: 0.5rem;
+    font-size: 0.88rem;
+  }
+  .task-item input[type="checkbox"] {
+    appearance: none;
+    width: 18px; height: 18px;
+    border: 2px solid var(--red);
+    border-radius: 5px;
+    flex-shrink: 0;
+    margin-top: 2px;
+    cursor: pointer;
+    position: relative;
+    transition: all 0.2s;
+    background: white;
+  }
+  .task-item input[type="checkbox"]:checked {
+    background: var(--green);
+    border-color: var(--green);
+  }
+  .task-item input[type="checkbox"]:checked::after {
+    content: '✓';
+    position: absolute;
+    color: white;
+    font-size: 11px;
+    font-weight: 800;
+    top: 50%; left: 50%;
+    transform: translate(-50%, -50%);
+  }
+  .task-item input[type="checkbox"]:checked + span {
+    text-decoration: line-through;
+    color: var(--text-muted);
+  }
+
+  /* Note Box */
+  .note-box {
+    background: var(--blue-bg);
+    border: 1px solid rgba(42, 108, 184, 0.15);
+    border-radius: 8px;
+    padding: 0.8rem 1rem;
+    font-size: 0.85rem;
+    color: var(--text);
+    margin-top: 0.5rem;
+  }
+  .note-box strong { color: var(--blue); }
+
+  /* Flow Diagram */
+  .flow-diagram {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 1.5rem;
+    margin: 1rem 0;
+    text-align: center;
+  }
+  .flow-steps {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: center;
+    gap: 0.4rem;
+  }
+  .flow-step {
+    background: var(--budenheim);
+    color: white;
+    padding: 0.5rem 1rem;
+    border-radius: 8px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    white-space: nowrap;
+  }
+  .flow-step.new {
+    background: var(--red);
+    position: relative;
+  }
+  .flow-step.new::after {
+    content: 'NEU';
+    position: absolute;
+    top: -8px; right: -8px;
+    background: var(--red);
+    color: white;
+    font-size: 0.55rem;
+    padding: 0.1rem 0.35rem;
+    border-radius: 4px;
+    font-weight: 800;
+    letter-spacing: 0.05em;
+  }
+  .flow-arrow {
+    color: var(--text-muted);
+    font-size: 1.2rem;
+    font-weight: 300;
+  }
+  .flow-label {
+    font-size: 0.7rem;
+    color: var(--text-muted);
+    margin-top: 0.2rem;
+    display: block;
+  }
+
+  /* Materials Grid */
+  .materials-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 0.7rem;
+  }
+  .material-card {
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;
+    padding: 0.9rem 1.2rem;
+    background: var(--amber-bg);
+    border: 1px solid var(--amber-border);
+    border-radius: 10px;
+    font-size: 0.85rem;
+  }
+  .material-icon {
+    width: 34px; height: 34px;
+    border-radius: 8px;
+    background: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    font-size: 1rem;
+  }
+  .material-card strong { display: block; }
+  .material-card .from { color: var(--text-muted); font-size: 0.78rem; }
+
+  /* Priority Summary */
+  .priority-list { counter-reset: priority; }
+  .priority-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.8rem;
+    padding: 0.9rem 1.2rem;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    margin-bottom: 0.5rem;
+    font-size: 0.9rem;
+    transition: border-color 0.2s;
+  }
+  .priority-item:hover { border-color: var(--budenheim); }
+  .priority-num {
+    counter-increment: priority;
+    width: 28px; height: 28px;
+    border-radius: 50%;
+    background: var(--red);
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 800;
+    font-size: 0.8rem;
+    flex-shrink: 0;
+  }
+  .priority-item.nice .priority-num {
+    background: var(--amber);
+  }
+
+  /* Print */
+  @media print {
+    body { padding: 1rem; }
+    .header { background: var(--budenheim) !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+    .scene-body { display: block !important; }
+    .task-item { background: #fef2f2 !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  }
+
+  @media (max-width: 600px) {
+    body { padding: 1rem; }
+    .header { padding: 1.5rem 1rem; }
+    .header h1 { font-size: 1.2rem; }
+    .meta-grid { grid-template-columns: 1fr 1fr; }
+    .flow-steps { flex-direction: column; }
+    .flow-arrow { transform: rotate(90deg); }
+  }
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<div class="header">
+  <div class="logos">
+    <span class="logo-text">Budenheim</span>
+    <div class="logo-divider"></div>
+    <span class="logo-text">BEMERS</span>
+  </div>
+  <h1>Meeting-Protokoll: Video Review</h1>
+  <div class="subtitle">3D-Animation Metal Treatment &middot; Storyboard + Vorschau Besprechung</div>
+</div>
+
+<!-- META -->
+<div class="meta-grid">
+  <div class="meta-card">
+    <div class="label">Datum</div>
+    <div class="value">19. Marz 2026</div>
+  </div>
+  <div class="meta-card">
+    <div class="label">Ort</div>
+    <div class="value">Coworking Koln</div>
+  </div>
+  <div class="meta-card">
+    <div class="label">Teilnehmer</div>
+    <div class="value">Koren, Andrej, Sarah (Budenheim), Fiorella</div>
+  </div>
+  <div class="meta-card">
+    <div class="label">Videoziel</div>
+    <div class="value">Interesse wecken, Gesprach initiieren</div>
+  </div>
+  <div class="meta-card">
+    <div class="label">Video Lange</div>
+    <div class="value">~95 Sekunden</div>
+  </div>
+  <div class="meta-card">
+    <div class="label">Auflosung</div>
+    <div class="value">720p (Ziel: min. 1080p)</div>
+  </div>
+</div>
+
+<!-- GESAMTEINDRUCK -->
+<div class="section">
+  <div class="section-title">
+    <div class="icon" style="background: var(--green-bg); color: var(--green);">&#10003;</div>
+    Gesamteindruck des Kunden
+  </div>
+  <div class="verdict">
+    <h3>Positiv aufgenommen</h3>
+    <ul>
+      <li>"Ich bin erst mal begeistert" (Andrej, Budenheim Technik)</li>
+      <li>"Von der Lange finde ich das ganz gut"</li>
+      <li>"Das fur Nicht-Techniker so runterzubringen, finde ich schon richtig gut"</li>
+      <li>Glow-Effekt auf Dornstange funktioniert besser als erwartet</li>
+      <li>Storytelling-Struktur (Problem, Losung, Ergebnis) wird verstanden</li>
+    </ul>
+  </div>
+</div>
+
+<!-- AUFNAHMELÜCKE -->
+<div class="section">
+  <div class="section-title">
+    <div class="icon" style="background: var(--amber-bg); color: var(--amber);">&#9888;</div>
+    Hinweis: ca. 15 Min. nicht aufgenommen
+  </div>
+  <div style="background: var(--amber-bg); border: 1px solid var(--amber-border); border-radius: 12px; padding: 1.3rem 1.6rem;">
+    <p style="font-size: 0.88rem; color: var(--text); margin-bottom: 0.8rem;">Wahrend des Meetings gab es eine Unterbrechung (Telefonat), in der ca. 15 Minuten nicht aufgenommen wurden. In dieser Zeit wurde folgendes besprochen:</p>
+    <ul style="list-style: none; padding: 0;">
+      <li style="font-size: 0.88rem; padding: 0.35rem 0; padding-left: 1.2rem; position: relative;"><span style="position: absolute; left: 0; color: var(--amber);">&#9679;</span> Weitere Details zur Walzengeometrie und zum MPM-Verfahren</li>
+      <li style="font-size: 0.88rem; padding: 0.35rem 0; padding-left: 1.2rem; position: relative;"><span style="position: absolute; left: 0; color: var(--amber);">&#9679;</span> Andrej zeigte Referenzvideos aus US-Werken auf seinem Laptop (nur intern, keine Veroffentlichungsrechte)</li>
+      <li style="font-size: 0.88rem; padding: 0.35rem 0; padding-left: 1.2rem; position: relative;"><span style="position: absolute; left: 0; color: var(--amber);">&#9679;</span> Diskussion uber die Darstellung des Desoxidationsmittels (wird nicht im Video gezeigt, aber Budenheim macht das auch)</li>
+      <li style="font-size: 0.88rem; padding: 0.35rem 0; padding-left: 1.2rem; position: relative;"><span style="position: absolute; left: 0; color: var(--amber);">&#9679;</span> Details zum Spruhprozess und Wasserkulung vor den Walzen (200 Bar Wasser spritzt Zunder ab)</li>
+    </ul>
+    <p style="font-size: 0.82rem; color: var(--text-muted); margin-top: 0.6rem;">Alle relevanten Action Items aus diesem Abschnitt sind in den Szenen-Anderungen unten enthalten.</p>
+  </div>
+</div>
+
+<!-- SZENE FUR SZENE -->
+<div class="section">
+  <div class="section-title">
+    <div class="icon" style="background: var(--accent-glow); color: var(--accent);">&#9881;</div>
+    Anderungen nach Szene
+  </div>
+
+  <!-- SZENE 1 -->
+  <div class="scene-card">
+    <div class="scene-header" onclick="this.parentElement.classList.toggle('open')">
+      <div class="scene-num">1</div>
+      <div class="scene-name">Einfuhrung / Walzprozess</div>
+      <span class="scene-status status-fix">5 Fixes</span>
+    </div>
+    <div class="scene-body">
+      <div class="discussed">
+        <div class="sub-label discussed-label">&#128172; Was besprochen wurde</div>
+        <ul>
+          <li>Dornstange in Realitat ca. 20m lang, Hohlblock nur 3-5m. Verhaltnis komplett falsch</li>
+          <li>Hohlblock sieht aus wie Holz, muss nach Stahl bei 1.250 Grad Celsius aussehen</li>
+          <li>Spitze der Dornstange ist falsch (rund). Muss flach/konisch sein. Foto kommt vom Kunden</li>
+          <li>Optional: Oberflache Hohlblock hat "Leopardenmuster" (Zunder/Eisenoxid)</li>
+          <li>Walzen konnten massiver sein. Aktuell 2 Walzen (MPM-Verfahren), modernere haben 3</li>
+        </ul>
+      </div>
+      <div class="fiorella-tasks">
+        <div class="sub-label task-label">&#9888; Fiorella: Umsetzen</div>
+        <label class="task-item"><input type="checkbox"><span><strong>Dornstange mindestens 3x langer machen</strong> als aktuell dargestellt</span></label>
+        <label class="task-item"><input type="checkbox"><span><strong>Hohlblock-Material andern:</strong> Muss nach gluhendem Stahl (1.250 Grad, orange/rot, metallisch) aussehen, nicht wie Holz</span></label>
+        <label class="task-item"><input type="checkbox"><span><strong>Dornstangen-Spitze andern:</strong> Flach/konisch abgeschnitten statt rund (warte auf Foto vom Kunden)</span></label>
+        <label class="task-item"><input type="checkbox"><span><strong>Text andern:</strong> "Suspension" rausnehmen, nur "Lubricant Application" verwenden</span></label>
+        <label class="task-item"><input type="checkbox"><span><strong>Unteren Text entfernen:</strong> "Process Stability Breaks" weglassen, nur obere Zeile behalten</span></label>
+      </div>
+      <div class="note-box">
+        <strong>Hinweis:</strong> Leopardenmuster auf Hohlblock ist Nice-to-Have, kein Muss. Walzen-Massivitat und 3er-Anordnung ebenfalls optional.
+      </div>
+    </div>
+  </div>
+
+  <!-- SZENE 2 -->
+  <div class="scene-card open">
+    <div class="scene-header" onclick="this.parentElement.classList.toggle('open')">
+      <div class="scene-num">2</div>
+      <div class="scene-name">Sticker-Problem (Rohr bleibt stecken)</div>
+      <span class="scene-status status-fix">3 Fixes</span>
+    </div>
+    <div class="scene-body">
+      <div class="discussed">
+        <div class="sub-label discussed-label">&#128172; Was besprochen wurde</div>
+        <ul>
+          <li>Der "Sticker" passiert in den ersten 2-3 Walzgerusten, NICHT am Ende des Prozesses</li>
+          <li>In der Realitat kuhlt das Rohr nach dem Sticker ab und wird dunkel (orange, dunkelrot, schwarz)</li>
+          <li>Rote Farbe signalisiert in der Stahlindustrie NICHT Gefahr, alles gluht rot. Abkuhlung zeigt das Problem besser</li>
+          <li>Sticker passieren ca. 2x pro Jahr. Soll nicht wegen Schmierstoff passieren</li>
+        </ul>
+      </div>
+      <div class="fiorella-tasks">
+        <div class="sub-label task-label">&#9888; Fiorella: Umsetzen</div>
+        <label class="task-item"><input type="checkbox"><span><strong>Sticker im ersten Drittel zeigen</strong> (spatestens beim 4. Walzgerust), nicht am Ende</span></label>
+        <label class="task-item"><input type="checkbox"><span><strong>Farbwechsel nach Sticker:</strong> Rohr geht von Orange, uber Dunkelrot, zu Dunkelgrau/Schwarz (Abkuhlung). Dornstange behalt ihre Farbe</span></label>
+        <label class="task-item"><input type="checkbox"><span><strong>Rohr stoppt und geht nicht weiter</strong> durch die restlichen Walzen</span></label>
+      </div>
+    </div>
+  </div>
+
+  <!-- SZENE 3 -->
+  <div class="scene-card">
+    <div class="scene-header" onclick="this.parentElement.classList.toggle('open')">
+      <div class="scene-num">3</div>
+      <div class="scene-name">Schmierstoff-Ansatzbereitung (Preparation)</div>
+      <span class="scene-status status-ok">OK</span>
+    </div>
+    <div class="scene-body">
+      <div class="discussed">
+        <div class="sub-label discussed-label">&#128172; Was besprochen wurde</div>
+        <ul>
+          <li>Darstellung von Waage, Forderschnecke, Mischbehalter ist korrekt</li>
+          <li>Pulverfarbe schwarz = korrekt</li>
+          <li>Schmierstoff in Realitat eher grau, aber Schwarz im Video ist OK (besserer Kontrast)</li>
+        </ul>
+      </div>
+      <div class="note-box">
+        <strong>Keine Anderungen notig.</strong> Szene wurde ohne Beanstandungen abgenommen.
+      </div>
+    </div>
+  </div>
+
+  <!-- SZENE 4 -->
+  <div class="scene-card open">
+    <div class="scene-header" onclick="this.parentElement.classList.toggle('open')">
+      <div class="scene-num">4</div>
+      <div class="scene-name">Kreislaufsystem (HAUPTPROBLEM)</div>
+      <span class="scene-status status-fix">Komplett neu</span>
+    </div>
+    <div class="scene-body">
+      <div class="discussed">
+        <div class="sub-label discussed-label">&#128172; Was besprochen wurde</div>
+        <ul>
+          <li>Aktuelle Darstellung ist unklar. Kreislauf-Animation "wild" und technisch falsch</li>
+          <li>Es fehlt ein kritischer Zwischenschritt: der Overspray Collection Tank (Cooling + Cleaning)</li>
+          <li>Uberschuss-Schmierstoff tropft nach unten (Schwerkraft), wird gesammelt, gekuhlt, gereinigt (Magnetfilter), zuruckgepumpt</li>
+          <li>Kunde will Rohrleitungen sehen (transparent, Flussigkeit sichtbar), keine abstrakte Animation</li>
+          <li>Overspray-Box kann simpel dargestellt werden: einfache Metallbox mit Beschriftung</li>
+        </ul>
+      </div>
+      <div class="fiorella-tasks">
+        <div class="sub-label task-label">&#9888; Fiorella: Komplett neu bauen</div>
+        <label class="task-item"><input type="checkbox"><span><strong>Overspray-Box hinzufugen:</strong> Einfache Metallbox (Quader) zwischen Spruhtrommel und Ruckfluss. Beschriftung: "Cooling &amp; Cleaning"</span></label>
+        <label class="task-item"><input type="checkbox"><span><strong>Rohrleitungen statt wilde Animation:</strong> Transparente Rohre mit sichtbarer schwarzer Flussigkeit (ahnlich wie bei Forderschnecke)</span></label>
+        <label class="task-item"><input type="checkbox"><span><strong>Kreislauf korrekt darstellen:</strong> Vorratbehalter, Spruhtrommel, Overspray-Box, zuruck zum Vorratbehalter (siehe Schema unten)</span></label>
+      </div>
+
+      <div class="flow-diagram">
+        <div style="font-weight: 700; margin-bottom: 0.8rem; color: var(--budenheim); font-size: 0.85rem;">KORREKTER KREISLAUF</div>
+        <div class="flow-steps">
+          <div>
+            <div class="flow-step">Vorratbehalter</div>
+            <span class="flow-label">Ansatzstation</span>
+          </div>
+          <span class="flow-arrow">&rarr;</span>
+          <div>
+            <div class="flow-step">Hochdruck-Pumpe</div>
+            <span class="flow-label">80 Bar, Dual System</span>
+          </div>
+          <span class="flow-arrow">&rarr;</span>
+          <div>
+            <div class="flow-step">Spruhtrommel</div>
+            <span class="flow-label">Dusen spruen auf Dornstange</span>
+          </div>
+          <span class="flow-arrow">&rarr;</span>
+          <div>
+            <div class="flow-step new">Overspray-Box</div>
+            <span class="flow-label">Cooling &amp; Cleaning</span>
+          </div>
+          <span class="flow-arrow">&rarr;</span>
+          <div>
+            <div class="flow-step">Zuruckpumpen</div>
+            <span class="flow-label">Zuruck zum Vorratbehalter</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="note-box">
+        <strong>Technischer Hintergrund:</strong> Suspension kommt mit Raumtemperatur auf die 100 Grad heisse Stange, wird auf 60 Grad erwarmt, muss gekuhlt werden. Magnetfilter im Overspray-Tank scheiden Eisenoxidpartikel ab. Ohne diesen Schritt verstopfen die Dusen.
+      </div>
+    </div>
+  </div>
+
+  <!-- SZENE 5 -->
+  <div class="scene-card">
+    <div class="scene-header" onclick="this.parentElement.classList.toggle('open')">
+      <div class="scene-num">5</div>
+      <div class="scene-name">Spruhtrommel / Dusen</div>
+      <span class="scene-status status-tweak">2 Tweaks</span>
+    </div>
+    <div class="scene-body">
+      <div class="discussed">
+        <div class="sub-label discussed-label">&#128172; Was besprochen wurde</div>
+        <ul>
+          <li>Aktuell nur 3 Dusen dargestellt, in Realitat mindestens 4, oft 6</li>
+          <li>Ring-Leitung um Dusen muss NICHT dargestellt werden (zu detailliert)</li>
+          <li>Eine Rohrleitung vom Vorratbehalter zur Spruhtrommel reicht</li>
+          <li>Leitung unten an der Spruhtrommel anschliessen, nicht oben</li>
+        </ul>
+      </div>
+      <div class="fiorella-tasks">
+        <div class="sub-label task-label">&#9888; Fiorella: Umsetzen</div>
+        <label class="task-item"><input type="checkbox"><span><strong>Dusenanzahl erhohen:</strong> Mindestens 4 Dusen (idealerweise 6) statt aktuell 3</span></label>
+        <label class="task-item"><input type="checkbox"><span><strong>Rohrleitung von unten anschliessen</strong> (nicht seitlich oder oben)</span></label>
+      </div>
+    </div>
+  </div>
+
+  <!-- SZENE 6 -->
+  <div class="scene-card">
+    <div class="scene-header" onclick="this.parentElement.classList.toggle('open')">
+      <div class="scene-num">6</div>
+      <div class="scene-name">Dual Pump System</div>
+      <span class="scene-status status-ok">OK</span>
+    </div>
+    <div class="scene-body">
+      <div class="note-box">
+        <strong>Keine Anderungen notig.</strong> Dual Pump System korrekt dargestellt. Zweck (unterbrechungsfreier Betrieb) kommt ruber.
+      </div>
+    </div>
+  </div>
+
+  <!-- SZENE 7 -->
+  <div class="scene-card">
+    <div class="scene-header" onclick="this.parentElement.classList.toggle('open')">
+      <div class="scene-num">7</div>
+      <div class="scene-name">Ergebnis + Branding</div>
+      <span class="scene-status status-ok">OK</span>
+    </div>
+    <div class="scene-body">
+      <div class="discussed">
+        <div class="sub-label discussed-label">&#128172; Was besprochen wurde</div>
+        <ul>
+          <li>Glow-Effekt auf der Dornstange funktioniert gut (im Storyboard war Skepsis, im Video uberzeugt es)</li>
+          <li>Zeigt indirekt: Produkte schutzen sowohl Rohr als auch Dornstange</li>
+        </ul>
+      </div>
+      <div class="note-box">
+        <strong>Keine Anderungen notig.</strong> Abschluss und Branding wurden positiv aufgenommen.
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- OFFENE MATERIALIEN -->
+<div class="section">
+  <div class="section-title">
+    <div class="icon" style="background: var(--amber-bg); color: var(--amber);">&#128230;</div>
+    Offene Referenzmaterialien vom Kunden
+  </div>
+  <div class="materials-grid">
+    <div class="material-card">
+      <div class="material-icon">&#128247;</div>
+      <div>
+        <strong>Foto Dornstangen-Spitze</strong>
+        <div class="from">Flache/konische Form. Andrej schickt.</div>
+      </div>
+    </div>
+    <div class="material-card">
+      <div class="material-icon">&#128206;</div>
+      <div>
+        <strong>Foto/Zeichnung Overspray-Box</strong>
+        <div class="from">Fur korrekte 3D-Darstellung. Budenheim sucht.</div>
+      </div>
+    </div>
+    <div class="material-card">
+      <div class="material-icon">&#127909;</div>
+      <div>
+        <strong>Referenzvideos Walzprozess (USA)</strong>
+        <div class="from">Erhalten. NUR intern verwenden, nicht veroffentlichen!</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- PRIORITATEN -->
+<div class="section">
+  <div class="section-title">
+    <div class="icon" style="background: var(--red-bg); color: var(--red);">&#9888;</div>
+    Fiorella: Prioritaten-Zusammenfassung
+  </div>
+
+  <div class="priority-list">
+    <div class="priority-item">
+      <div class="priority-num">1</div>
+      <div><strong>Kreislaufsystem komplett neu</strong> mit Overspray-Box, Rohrleitungen, korrektem Fluss</div>
+    </div>
+    <div class="priority-item">
+      <div class="priority-num">2</div>
+      <div><strong>Dornstange 3x langer</strong> als aktuell dargestellt</div>
+    </div>
+    <div class="priority-item">
+      <div class="priority-num">3</div>
+      <div><strong>Sticker im ersten Drittel</strong> + Farbwechsel orange, dunkelrot, schwarz</div>
+    </div>
+    <div class="priority-item">
+      <div class="priority-num">4</div>
+      <div><strong>Hohlblock = Stahl</strong>, nicht Holz-Optik. Gluhend bei 1.250 Grad</div>
+    </div>
+    <div class="priority-item">
+      <div class="priority-num">5</div>
+      <div><strong>Dornstangen-Spitze konisch</strong> statt rund (warte auf Foto)</div>
+    </div>
+    <div class="priority-item">
+      <div class="priority-num">6</div>
+      <div><strong>Text:</strong> "Suspension" raus, nur "Lubricant". "Process Stability Breaks" entfernen</div>
+    </div>
+    <div class="priority-item">
+      <div class="priority-num">7</div>
+      <div><strong>Dusen: 3, 4 (min.)</strong>, idealerweise 6. Rohrleitung von unten</div>
+    </div>
+    <div class="priority-item nice">
+      <div class="priority-num">+</div>
+      <div><strong>Nice-to-Have:</strong> Leopardenmuster auf Hohlblock, massivere Walzen, finale Auflosung mind. 1080p</div>
+    </div>
+  </div>
+</div>
+
+<!-- NACHSTE SCHRITTE -->
+<div class="section">
+  <div class="section-title">
+    <div class="icon" style="background: var(--accent-glow); color: var(--accent);">&#10132;</div>
+    Nachste Schritte
+  </div>
+  <div class="priority-list">
+    <div class="priority-item">
+      <div class="priority-num" style="background: var(--budenheim);">1</div>
+      <div>Referenzmaterialien von Budenheim einsammeln (Fotos Dornstange, Overspray)</div>
+    </div>
+    <div class="priority-item">
+      <div class="priority-num" style="background: var(--budenheim);">2</div>
+      <div>Fiorella setzt alle Anderungen in 3D um (Prioritat 1-7)</div>
+    </div>
+    <div class="priority-item">
+      <div class="priority-num" style="background: var(--budenheim);">3</div>
+      <div>Zweite Review-Runde planen nach Uberarbeitung</div>
+    </div>
+    <div class="priority-item">
+      <div class="priority-num" style="background: var(--budenheim);">4</div>
+      <div>Finales Rendering in mindestens 1080p</div>
+    </div>
+  </div>
+</div>
+
+<div style="text-align: center; padding: 2rem 0 1rem; color: var(--text-muted); font-size: 0.75rem;">
+  Film-labor &middot; Meeting-Protokoll &middot; 19. Marz 2026
+</div>
+
+<script>
+// Scene cards toggle
+document.querySelectorAll('.scene-card').forEach(card => {
+  const body = card.querySelector('.scene-body');
+  if (!card.classList.contains('open')) {
+    body.style.display = 'none';
+  }
+});
+
+document.querySelectorAll('.scene-header').forEach(header => {
+  header.addEventListener('click', () => {
+    const card = header.parentElement;
+    const body = card.querySelector('.scene-body');
+    if (card.classList.contains('open')) {
+      body.style.display = 'block';
+    } else {
+      body.style.display = 'none';
+    }
+  });
+});
+
+// Fix toggle logic
+document.querySelectorAll('.scene-header').forEach(header => {
+  header.removeEventListener('click', () => {});
+  header.onclick = function() {
+    const card = this.parentElement;
+    const body = card.querySelector('.scene-body');
+    const isOpen = body.style.display !== 'none';
+    body.style.display = isOpen ? 'none' : 'block';
+  };
+});
+
+// Save checkbox state to localStorage
+document.querySelectorAll('.task-item input[type="checkbox"]').forEach((cb, i) => {
+  const key = 'budenheim-task-' + i;
+  cb.checked = localStorage.getItem(key) === 'true';
+  if (cb.checked) {
+    cb.nextElementSibling.style.textDecoration = 'line-through';
+    cb.nextElementSibling.style.color = 'var(--text-muted)';
+  }
+  cb.addEventListener('change', () => {
+    localStorage.setItem(key, cb.checked);
+    if (cb.checked) {
+      cb.nextElementSibling.style.textDecoration = 'line-through';
+      cb.nextElementSibling.style.color = 'var(--text-muted)';
+    } else {
+      cb.nextElementSibling.style.textDecoration = 'none';
+      cb.nextElementSibling.style.color = 'var(--text)';
+    }
+  });
+});
+</script>
+
+</body>
+</html>
